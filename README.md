@@ -7,6 +7,34 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
 </p>
 
+
+## Project Setup
+
+This assessment was done using laravel and vue js.
+
+1. Set up your database in the .env file
+
+2. run migration using "php artisan migrate"
+
+3. run "npm install" and "npm run dev"
+
+4. Start the project by running "php artisan serve"
+
+## End Points
+
+- "/api/v1/books" to fetch the books from the local database. The request is "GET"
+
+- "/api/v1/books/{id}" to fetch a specific book from the local database. The request is "GET"
+
+- "/api/v1/books" to create a new book in the local database. The request is "POST"
+
+- "/api/v1/books/{id}" to update book in the local database. The request is "PATCH"
+
+- "/api/v1/books/{id}" to delete book from the local database. The request is "DELETE"
+
+- "api/external-books" to fetch data from external api "https://www.anapioficeandfire.com/api/books" . The request is "GET"
+
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
