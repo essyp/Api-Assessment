@@ -32,7 +32,7 @@ This assessment was done using laravel and vue js.
 
 - "/api/v1/books/{id}" to delete book from the local database. The request is "DELETE"
 
-- "api/external-books" to fetch data from external api "https://www.anapioficeandfire.com/api/books" . The request is "GET"
+- "/api/external-books" to fetch data from external api "https://www.anapioficeandfire.com/api/books" . The request is "GET"
 
 
 ## About Laravel
