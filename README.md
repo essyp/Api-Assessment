@@ -28,3 +28,5 @@ This assessment was done using "laravel" and "vue js".
 - "/api/external-books" to fetch data from external api "https://www.anapioficeandfire.com/api/books" . The request is "GET"
 - "/api/external-books" to fetch single data from external api "https://www.anapioficeandfire.com/api/books?name=A Game of Thrones" . The request is "GET"
 
+There is also an attached sql file that you can use to populate the database.
+
