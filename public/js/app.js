@@ -2140,6 +2140,31 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2148,6 +2173,17 @@ __webpack_require__.r(__webpack_exports__);
         name: '',
         isbn: '',
         authors: '',
+        number_of_pages: '',
+        publisher: '',
+        country: '',
+        release_date: '',
+        id: '',
+        book_authors: []
+      },
+      createBook: {
+        name: '',
+        isbn: '',
+        authors: [],
         number_of_pages: '',
         publisher: '',
         country: '',
@@ -2164,6 +2200,22 @@ __webpack_require__.r(__webpack_exports__);
     this.fetchBooks();
   },
   methods: {
+    addField: function addField() {
+      this.createBook.authors.push({
+        name: ''
+      });
+    },
+    deleteField: function deleteField(index) {
+      this.createBook.authors.splice(index, 1);
+    },
+    addField2: function addField2() {
+      this.viewBook.book_authors.push({
+        name: ''
+      });
+    },
+    deleteField2: function deleteField2(index) {
+      this.viewBook.book_authors.splice(index, 1);
+    },
     fetchBooks: function fetchBooks() {
       var _this = this;
 
@@ -2173,13 +2225,34 @@ __webpack_require__.r(__webpack_exports__);
         }
 
         _this.books = response.data.data;
+        console.log(_this.books);
       })["catch"](function (error) {});
     },
-    createBook: function createBook(event) {
+    // addBook (event) {
+    //     open_loader('#page');
+    //       axios.post(this.Url + '/api/v1/books/', this.createBook)
+    //     .then((response) => {
+    //     if (response.data.status_code == 200) {
+    //         $('#create').modal('hide');
+    //         toastr.success(response.data.status);
+    //         this.fetchBooks();
+    //         window.setTimeout(function(){location.reload();},2000);
+    //         close_loader('#page');
+    //     }
+    //     }).catch((error) =>{
+    //         toastr.error(error.response.data.status);
+    //         close_loader('#page');
+    //     })
+    // },
+    addBook: function addBook() {
       var _this2 = this;
 
       open_loader('#page');
-      axios.post(this.Url + '/api/v1/books/', this.viewBook).then(function (response) {
+      var form = $("#create-book")[0];
+
+      var _data = new FormData(form);
+
+      axios.post(this.Url + '/api/v1/books/', _data).then(function (response) {
         if (response.data.status_code == 200) {
           $('#create').modal('hide');
           toastr.success(response.data.status);
@@ -2188,7 +2261,7 @@ __webpack_require__.r(__webpack_exports__);
 
           window.setTimeout(function () {
             location.reload();
-          }, 2000);
+          }, 1000);
           close_loader('#page');
         }
       })["catch"](function (error) {
@@ -38164,7 +38237,23 @@ var render = function() {
                             _vm._v(" "),
                             _c("td", [_vm._v(_vm._s(book.isbn))]),
                             _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(book.authors))]),
+                            _c("td", [
+                              book.book_authors.length > 0
+                                ? _c(
+                                    "span",
+                                    _vm._l(book.book_authors, function(
+                                      author,
+                                      index
+                                    ) {
+                                      return _c("span", { key: index }, [
+                                        _vm._v(_vm._s(author.name) + ","),
+                                        _c("br")
+                                      ])
+                                    }),
+                                    0
+                                  )
+                                : _c("span", [_vm._v(" -- ")])
+                            ]),
                             _vm._v(" "),
                             _c("td", [_vm._v(_vm._s(book.number_of_pages))]),
                             _vm._v(" "),
@@ -38351,31 +38440,44 @@ var render = function() {
                     })
                   ]),
                   _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", [_vm._v("Authors")]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.viewBook.authors,
-                          expression: "viewBook.authors"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text", name: "authors", readonly: "" },
-                      domProps: { value: _vm.viewBook.authors },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.viewBook, "authors", $event.target.value)
-                        }
-                      }
-                    })
-                  ]),
+                  _c(
+                    "div",
+                    { staticClass: "form-group" },
+                    [
+                      _c("label", [_vm._v("Authors")]),
+                      _vm._v(" "),
+                      _vm._l(_vm.viewBook.book_authors, function(
+                        author,
+                        index
+                      ) {
+                        return _c("span", { key: index }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: author.name,
+                                expression: "author.name"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: { type: "text", readonly: "" },
+                            domProps: { value: author.name },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(author, "name", $event.target.value)
+                              }
+                            }
+                          }),
+                          _c("br")
+                        ])
+                      })
+                    ],
+                    2
+                  ),
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group" }, [
                     _c("label", [_vm._v("Number of Pages")]),
@@ -38524,217 +38626,290 @@ var render = function() {
               _vm._m(1),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
-                _c("form", { staticClass: "pl-3 pr-3" }, [
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", [_vm._v("Name")]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.viewBook.name,
-                          expression: "viewBook.name"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text", name: "name" },
-                      domProps: { value: _vm.viewBook.name },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
+                _c(
+                  "form",
+                  { staticClass: "pl-3 pr-3", attrs: { id: "create-book" } },
+                  [
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", [_vm._v("Name")]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.createBook.name,
+                            expression: "createBook.name"
                           }
-                          _vm.$set(_vm.viewBook, "name", $event.target.value)
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", [_vm._v("ISBN")]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.viewBook.isbn,
-                          expression: "viewBook.isbn"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text", name: "isbn" },
-                      domProps: { value: _vm.viewBook.isbn },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.viewBook, "isbn", $event.target.value)
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", [_vm._v("Authors")]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.viewBook.authors,
-                          expression: "viewBook.authors"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text", name: "authors" },
-                      domProps: { value: _vm.viewBook.authors },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.viewBook, "authors", $event.target.value)
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", [_vm._v("Number of Pages")]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.viewBook.number_of_pages,
-                          expression: "viewBook.number_of_pages"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text", name: "number_of_pages" },
-                      domProps: { value: _vm.viewBook.number_of_pages },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.viewBook,
-                            "number_of_pages",
-                            $event.target.value
-                          )
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", [_vm._v("Publisher")]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.viewBook.publisher,
-                          expression: "viewBook.publisher"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text", name: "publisher" },
-                      domProps: { value: _vm.viewBook.publisher },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.viewBook,
-                            "publisher",
-                            $event.target.value
-                          )
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", [_vm._v("Country")]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.viewBook.country,
-                          expression: "viewBook.country"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text", name: "country" },
-                      domProps: { value: _vm.viewBook.country },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.viewBook, "country", $event.target.value)
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", [_vm._v("Released Date")]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.viewBook.release_date,
-                          expression: "viewBook.release_date"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "date", name: "release_date" },
-                      domProps: { value: _vm.viewBook.release_date },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.viewBook,
-                            "release_date",
-                            $event.target.value
-                          )
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group text-center" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-primary",
-                        attrs: { type: "button" },
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", name: "name" },
+                        domProps: { value: _vm.createBook.name },
                         on: {
-                          click: function($event) {
-                            return _vm.createBook()
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.createBook,
+                              "name",
+                              $event.target.value
+                            )
                           }
                         }
-                      },
-                      [_vm._v("Create")]
-                    )
-                  ])
-                ])
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", [_vm._v("ISBN")]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.createBook.isbn,
+                            expression: "createBook.isbn"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", name: "isbn" },
+                        domProps: { value: _vm.createBook.isbn },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.createBook,
+                              "isbn",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
+                        _c("label", [
+                          _vm._v("Authors\n                            "),
+                          _c("p", [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn-sm btn btn-dark",
+                                staticStyle: { float: "right" },
+                                attrs: { type: "button" },
+                                on: { click: _vm.addField }
+                              },
+                              [
+                                _c("i", { staticClass: "fa fa-plus" }),
+                                _vm._v(
+                                  " Add Author\n                                "
+                                )
+                              ]
+                            ),
+                            _c("br")
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _vm._m(2),
+                        _vm._v(" "),
+                        _vm._l(_vm.createBook.authors, function(input, index) {
+                          return _c("div", { staticClass: "row" }, [
+                            _c("div", { staticClass: "col-md-10" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: input.author,
+                                    expression: "input.author"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: { type: "text", name: "authors[]" },
+                                domProps: { value: input.author },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      input,
+                                      "author",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              }),
+                              _c("br")
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-md-2" }, [
+                              _c(
+                                "button",
+                                {
+                                  staticStyle: {
+                                    color: "red",
+                                    float: "right",
+                                    border: "0"
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.deleteField(index)
+                                    }
+                                  }
+                                },
+                                [_vm._v("X")]
+                              )
+                            ])
+                          ])
+                        })
+                      ],
+                      2
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", [_vm._v("Number of Pages")]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.createBook.number_of_pages,
+                            expression: "createBook.number_of_pages"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", name: "number_of_pages" },
+                        domProps: { value: _vm.createBook.number_of_pages },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.createBook,
+                              "number_of_pages",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", [_vm._v("Publisher")]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.createBook.publisher,
+                            expression: "createBook.publisher"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", name: "publisher" },
+                        domProps: { value: _vm.createBook.publisher },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.createBook,
+                              "publisher",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", [_vm._v("Country")]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.createBook.country,
+                            expression: "createBook.country"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", name: "country" },
+                        domProps: { value: _vm.createBook.country },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.createBook,
+                              "country",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", [_vm._v("Released Date")]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.createBook.release_date,
+                            expression: "createBook.release_date"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "date", name: "release_date" },
+                        domProps: { value: _vm.createBook.release_date },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.createBook,
+                              "release_date",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group text-center" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary",
+                          attrs: { type: "button" },
+                          on: {
+                            click: function($event) {
+                              return _vm.addBook()
+                            }
+                          }
+                        },
+                        [_vm._v("Create")]
+                      )
+                    ])
+                  ]
+                )
               ])
             ])
           ])
@@ -38786,239 +38961,280 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
-                _c("form", { staticClass: "pl-3 pr-3" }, [
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", [_vm._v("Name")]),
+                _c(
+                  "form",
+                  { staticClass: "pl-3 pr-3", attrs: { id: "update-book" } },
+                  [
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", [_vm._v("Name")]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.viewBook.name,
+                            expression: "viewBook.name"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", name: "name" },
+                        domProps: { value: _vm.viewBook.name },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.viewBook, "name", $event.target.value)
+                          }
+                        }
+                      })
+                    ]),
                     _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.viewBook.name,
-                          expression: "viewBook.name"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text", name: "name" },
-                      domProps: { value: _vm.viewBook.name },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", [_vm._v("ISBN")]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.viewBook.isbn,
+                            expression: "viewBook.isbn"
                           }
-                          _vm.$set(_vm.viewBook, "name", $event.target.value)
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", [_vm._v("ISBN")]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.viewBook.isbn,
-                          expression: "viewBook.isbn"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text", name: "isbn" },
-                      domProps: { value: _vm.viewBook.isbn },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", name: "isbn" },
+                        domProps: { value: _vm.viewBook.isbn },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.viewBook, "isbn", $event.target.value)
                           }
-                          _vm.$set(_vm.viewBook, "isbn", $event.target.value)
                         }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", [_vm._v("Authors")]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.viewBook.authors,
-                          expression: "viewBook.authors"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text", name: "authors" },
-                      domProps: { value: _vm.viewBook.authors },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.viewBook, "authors", $event.target.value)
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", [_vm._v("Number of Pages")]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.viewBook.number_of_pages,
-                          expression: "viewBook.number_of_pages"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text", name: "number_of_pages" },
-                      domProps: { value: _vm.viewBook.number_of_pages },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.viewBook,
-                            "number_of_pages",
-                            $event.target.value
-                          )
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", [_vm._v("Publisher")]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.viewBook.publisher,
-                          expression: "viewBook.publisher"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text", name: "publisher" },
-                      domProps: { value: _vm.viewBook.publisher },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.viewBook,
-                            "publisher",
-                            $event.target.value
-                          )
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", [_vm._v("Country")]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.viewBook.country,
-                          expression: "viewBook.country"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "text", name: "country" },
-                      domProps: { value: _vm.viewBook.country },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.viewBook, "country", $event.target.value)
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", [_vm._v("Released Date")]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.viewBook.release_date,
-                          expression: "viewBook.release_date"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "date", name: "release_date" },
-                      domProps: { value: _vm.viewBook.release_date },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.viewBook,
-                            "release_date",
-                            $event.target.value
-                          )
-                        }
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group text-center" }, [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.viewBook.id,
-                          expression: "viewBook.id"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "hidden", name: "id" },
-                      domProps: { value: _vm.viewBook.id },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.viewBook, "id", $event.target.value)
-                        }
-                      }
-                    }),
+                      })
+                    ]),
                     _vm._v(" "),
                     _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-primary",
-                        attrs: { type: "button" },
+                      "div",
+                      { staticClass: "form-group" },
+                      [
+                        _c("label", [
+                          _vm._v("Authors\n                            "),
+                          _c("p", [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn-sm btn btn-dark",
+                                staticStyle: { float: "right" },
+                                attrs: { type: "button" },
+                                on: { click: _vm.addField2 }
+                              },
+                              [
+                                _c("i", { staticClass: "fa fa-plus" }),
+                                _vm._v(
+                                  " Add Author\n                                "
+                                )
+                              ]
+                            ),
+                            _c("br")
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _vm._l(_vm.viewBook.book_authors, function(
+                          author,
+                          index
+                        ) {
+                          return _c("span", { key: index }, [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: author.name,
+                                  expression: "author.name"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: { type: "text", name: "authors[]" },
+                              domProps: { value: author.name },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(author, "name", $event.target.value)
+                                }
+                              }
+                            }),
+                            _c("br")
+                          ])
+                        })
+                      ],
+                      2
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", [_vm._v("Number of Pages")]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.viewBook.number_of_pages,
+                            expression: "viewBook.number_of_pages"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", name: "number_of_pages" },
+                        domProps: { value: _vm.viewBook.number_of_pages },
                         on: {
-                          click: function($event) {
-                            return _vm.updateBook(_vm.viewBook.id)
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.viewBook,
+                              "number_of_pages",
+                              $event.target.value
+                            )
                           }
                         }
-                      },
-                      [_vm._v("Update")]
-                    )
-                  ])
-                ])
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", [_vm._v("Publisher")]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.viewBook.publisher,
+                            expression: "viewBook.publisher"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", name: "publisher" },
+                        domProps: { value: _vm.viewBook.publisher },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.viewBook,
+                              "publisher",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", [_vm._v("Country")]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.viewBook.country,
+                            expression: "viewBook.country"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", name: "country" },
+                        domProps: { value: _vm.viewBook.country },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.viewBook,
+                              "country",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group" }, [
+                      _c("label", [_vm._v("Released Date")]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.viewBook.release_date,
+                            expression: "viewBook.release_date"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "date", name: "release_date" },
+                        domProps: { value: _vm.viewBook.release_date },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.viewBook,
+                              "release_date",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group text-center" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.viewBook.id,
+                            expression: "viewBook.id"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "hidden", name: "id" },
+                        domProps: { value: _vm.viewBook.id },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.viewBook, "id", $event.target.value)
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary",
+                          attrs: { type: "button" },
+                          on: {
+                            click: function($event) {
+                              return _vm.updateBook(_vm.viewBook.id)
+                            }
+                          }
+                        },
+                        [_vm._v("Update")]
+                      )
+                    ])
+                  ]
+                )
               ])
             ])
           ])
@@ -39059,7 +39275,7 @@ var render = function() {
                     ]
                   ),
                   _vm._v(" "),
-                  _vm._m(2)
+                  _vm._m(3)
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "modal-body" }, [
@@ -39146,6 +39362,20 @@ var staticRenderFns = [
         },
         [_vm._v("×")]
       )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-10" }, [
+        _c("input", {
+          staticClass: "form-control",
+          attrs: { type: "text", name: "authors[]" }
+        }),
+        _c("br")
+      ])
     ])
   },
   function() {

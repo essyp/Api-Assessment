@@ -17,3 +17,11 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('external-books', 'ApiController@fetchApiBooks');
+
+Route::get('v1/books', 'ApiController@fetchCrud');
+Route::get('v1/books/{id}', 'ApiController@fetchCrudById');
+Route::post('v1/books', 'ApiController@createCrud');
+Route::patch('v1/books/{id}', 'ApiController@updateCrud');
+Route::delete('v1/books/{id}', 'ApiController@deleteCrud');

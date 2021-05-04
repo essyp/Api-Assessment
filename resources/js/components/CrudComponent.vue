@@ -39,7 +39,7 @@
                   <td>{{index + 1}}</td>
                   <td>{{book.name}}</td>
                   <td>{{book.isbn}}</td>
-                  <td>{{book.authors}}</td>
+                  <td><span v-if="book.book_authors.length > 0"><span v-for="(author, index) in book.book_authors" :key="index">{{author.name}},<br></span></span> <span v-else> -- </span></td>
                   <td>{{book.number_of_pages}}</td>
                   <td>{{book.publisher}}</td>
                   <td>{{book.country}}</td>
@@ -84,7 +84,7 @@
                     </div>
                     <div class="form-group">
                         <label>Authors</label>
-                        <input class="form-control" type="text" v-model="viewBook.authors" name="authors" readonly>
+                        <span v-for="(author, index) in viewBook.book_authors" :key="index"><input class="form-control" type="text" v-model="author.name" readonly><br></span>
                     </div>
                     <div class="form-group">
                         <label>Number of Pages</label>
@@ -118,37 +118,56 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body">
-                <form class="pl-3 pr-3">
+                <form class="pl-3 pr-3" id="create-book">
                     <div class="form-group">
                         <label>Name</label>
-                        <input class="form-control" type="text" v-model="viewBook.name" name="name">
+                        <input class="form-control" type="text" v-model="createBook.name" name="name">
                     </div>
                     <div class="form-group">
                         <label>ISBN</label>
-                        <input class="form-control" type="text" v-model="viewBook.isbn" name="isbn">
+                        <input class="form-control" type="text" v-model="createBook.isbn" name="isbn">
                     </div>
                     <div class="form-group">
-                        <label>Authors</label>
-                        <input class="form-control" type="text" v-model="viewBook.authors" name="authors">
+                        <label>Authors
+                            <p>
+                                <button style="float:right" type="button" @click="addField" class="btn-sm btn btn-dark">
+                                <i class="fa fa-plus"></i> Add Author
+                                </button><br>
+                            </p>
+                        </label>
+                        
+                        <div class="row">
+                            <div class="col-md-10">
+                                <input class="form-control" type="text" name="authors[]"><br>
+                            </div>
+                        </div>
+                        <div class="row" v-for="(input, index) in createBook.authors">
+                            <div class="col-md-10">
+                                <input class="form-control" type="text" v-model="input.author" name="authors[]"><br>
+                            </div>
+                            <div class="col-md-2">
+                                <button @click="deleteField(index)" style="color: red; float: right; border: 0">X</button>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Number of Pages</label>
-                        <input class="form-control" type="text" v-model="viewBook.number_of_pages" name="number_of_pages">
+                        <input class="form-control" type="text" v-model="createBook.number_of_pages" name="number_of_pages">
                     </div>
                     <div class="form-group">
                         <label>Publisher</label>
-                        <input class="form-control" type="text" v-model="viewBook.publisher" name="publisher">
+                        <input class="form-control" type="text" v-model="createBook.publisher" name="publisher">
                     </div>
                     <div class="form-group">
                         <label>Country</label>
-                        <input class="form-control" type="text" v-model="viewBook.country" name="country">
+                        <input class="form-control" type="text" v-model="createBook.country" name="country">
                     </div>
                     <div class="form-group">
                         <label>Released Date</label>
-                        <input class="form-control" type="date" v-model="viewBook.release_date" name="release_date">
+                        <input class="form-control" type="date" v-model="createBook.release_date" name="release_date">
                     </div>
                     <div class="form-group text-center">
-                        <button class="btn btn-primary" type="button" @click="createBook()">Create</button>
+                        <button class="btn btn-primary" type="button" @click="addBook()">Create</button>
                     </div>
                 </form>
             </div>
@@ -166,7 +185,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body">
-                <form class="pl-3 pr-3">
+                <form class="pl-3 pr-3" id="update-book">
                     <div class="form-group">
                         <label>Name</label>
                         <input class="form-control" type="text" v-model="viewBook.name" name="name">
@@ -176,8 +195,14 @@
                         <input class="form-control" type="text" v-model="viewBook.isbn" name="isbn">
                     </div>
                     <div class="form-group">
-                        <label>Authors</label>
-                        <input class="form-control" type="text" v-model="viewBook.authors" name="authors">
+                        <label>Authors
+                            <p>
+                                <button style="float:right" type="button" @click="addField2" class="btn-sm btn btn-dark">
+                                <i class="fa fa-plus"></i> Add Author
+                                </button><br>
+                            </p>
+                        </label>
+                        <span v-for="(author, index) in viewBook.book_authors" :key="index"><input class="form-control" type="text" v-model="author.name" name="authors[]"><br></span>
                     </div>
                     <div class="form-group">
                         <label>Number of Pages</label>
@@ -244,6 +269,17 @@
                   country:'',
                   release_date:'',
                   id:'',
+                  book_authors:[]
+                },
+                createBook:{
+                  name:'',
+                  isbn:'',
+                  authors:[],
+                  number_of_pages:'',
+                  publisher:'',
+                  country:'',
+                  release_date:'',
+                  id:'',
                 },
                 searchBooks: null,
             }
@@ -258,31 +294,71 @@
         },
 
         methods: {
+            addField() {
+				this.createBook.authors.push({
+					name: '',
+				})
+			},
+
+            deleteField(index) {
+			    this.createBook.authors.splice(index,1)
+			},
+
+            addField2() {
+				this.viewBook.book_authors.push({
+					name: '',
+				})
+			},
+
+            deleteField2(index) {
+			    this.viewBook.book_authors.splice(index,1)
+			},
+
             fetchBooks () {
                 axios(this.Url + '/api/v1/books').then(response =>{
                     if (! response.data == 200) {
                         return this.errorMessage = 'Could not fetch books';
                     }
                     this.books = response.data.data;
+                    console.log(this.books);
                 }).catch(error => { });
             },
 
-            createBook (event) {
+            // addBook (event) {
+            //     open_loader('#page');
+            //       axios.post(this.Url + '/api/v1/books/', this.createBook)
+            //     .then((response) => {
+            //     if (response.data.status_code == 200) {
+            //         $('#create').modal('hide');
+            //         toastr.success(response.data.status);
+            //         this.fetchBooks();
+            //         window.setTimeout(function(){location.reload();},2000);
+            //         close_loader('#page');
+            //     }
+            //     }).catch((error) =>{
+            //         toastr.error(error.response.data.status);
+            //         close_loader('#page');
+            //     })
+            // },
+
+            addBook () {
                 open_loader('#page');
-                  axios.post(this.Url + '/api/v1/books/', this.viewBook)
+                    var form = $("#create-book")[0];
+		            var _data = new FormData(form);
+                    axios.post(this.Url + '/api/v1/books/', _data)
                 .then((response) => {
                 if (response.data.status_code == 200) {
                     $('#create').modal('hide');
                     toastr.success(response.data.status);
                     this.fetchBooks();
-                    window.setTimeout(function(){location.reload();},2000);
+                    window.setTimeout(function(){location.reload();},1000);
                     close_loader('#page');
                 }
                 }).catch((error) =>{
                     toastr.error(error.response.data.status);
                     close_loader('#page');
                 })
-            },
+			},
 
             updateBook (event) {
                 open_loader('#page');

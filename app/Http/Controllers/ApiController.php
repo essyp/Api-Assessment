@@ -7,6 +7,8 @@ use App\Helpers\ApiCall;
 use App\Helpers\ResponseHelper;
 use Illuminate\Support\Facades\Validator;
 use App\Book;
+use App\Author;
+use Carbon\Carbon;
 
 class ApiController extends Controller
 {
@@ -21,7 +23,7 @@ class ApiController extends Controller
 
     public function fetchCrud()
     {
-        $data = Book::orderBY('id','desc')->get();
+        $data = Book::with('book_authors')->orderBY('id','desc')->get();
         return ResponseHelper::responseDisplay(200, 'success', $data);
     }
 
@@ -51,12 +53,20 @@ class ApiController extends Controller
         $data = new Book();
         $data->name = $request->name;
         $data->isbn = $request->isbn;
-        $data->authors = $request->authors;
+        $data->authors = 'none';
         $data->country = $request->country;
         $data->number_of_pages = $request->number_of_pages;
         $data->publisher = $request->publisher;
         $data->release_date = $request->release_date;
         if($data->save()){
+            
+            for ($i=0; $i<count($request->authors); $i++) {
+                $author = new Author();
+                $author->book_id = $data->id;
+                $author->name = $request->authors[$i];
+                $author->save();
+            }
+            
             return ResponseHelper::responseDisplay(200, 'success', $data);
         }
         return ResponseHelper::responseDisplay(400, 'failed', $data);
@@ -82,12 +92,19 @@ class ApiController extends Controller
         $data = Book::where('id', $id)->first();
         $data->name = $request->name;
         $data->isbn = $request->isbn;
-        $data->authors = $request->authors;
+        // $data->authors = $request->authors;
         $data->country = $request->country;
         $data->number_of_pages = $request->number_of_pages;
         $data->publisher = $request->publisher;
         $data->release_date = $request->release_date;
         if($data->save()){
+            Author::where('book_id',$id)->delete();
+            foreach ($request->book_authors as $auth) {
+                $author = new Author();
+                $author->book_id = $data->id;
+                $author->name = $auth['name'];
+                $author->save();
+            }
             return ResponseHelper::responseDelete(200, 'success', 'The book '.$data->name.' was updated successfully', $data);
         }
         return ResponseHelper::responseDelete(400, 'failed', 'Failed to update', $data);
